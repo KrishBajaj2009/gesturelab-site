@@ -1,4 +1,4 @@
-# GestureLab — Draw beyond the screen
+# GestureLab — Interactive geometry studio
 
 GestureLab is a responsive, privacy-conscious educational game in which players trace geometric shapes using a webcam pinch gesture or a mouse/touchscreen. It is a **static website**: no backend, accounts, payment, or database are required.
 
@@ -30,18 +30,23 @@ gesturelab-site/
 └── README.md       # This file
 ```
 
-## Fastest way to publish it publicly: Netlify Drop
+## Public deployment: GitHub Pages
 
-1. Unzip `GestureLab-Website.zip` on your computer.
-2. Open [Netlify Drop](https://app.netlify.com/drop) in your browser.
-3. Sign in or create a Netlify account if requested.
-4. Drag the **entire `gesturelab-site` folder** onto the upload area (the folder must contain `index.html` at its root).
-5. Netlify will publish the site at a public HTTPS address ending in `.netlify.app`.
-6. Open the URL. Test the Pointer mode first. Then choose **Camera** and allow camera access.
-7. Use the dashboard to rename the site, e.g., `gesturelab-yourname.netlify.app`, if that name is available.
-8. To update the site later, redeploy the new folder from Netlify's Deploys area.
+This repository is set up as a static site, so no build pipeline or backend is needed.
 
-**Important:** Hosting requires an account; this project is not published for you. The website needs an Internet connection the first time camera mode is started because the MediaPipe JavaScript, WASM, and model are hosted by Google/CDN. Font files are also fetched from Google Fonts (with system fallbacks if unavailable).
+1. Go to **Settings → Pages** in this GitHub repository.
+2. Choose **Deploy from a branch**.
+3. Choose branch `main` and folder `/ (root)`, then click Save.
+4. Review the deployment under **Actions → pages-build-deployment**.
+5. Open [GestureLab](https://krishbajaj2009.github.io/zip2026/) once GitHub Pages reports a successful deployment.
+
+The published address is `https://krishbajaj2009.github.io/zip2026/`. All HTML, CSS, and JavaScript paths are relative so the site works under the repository path.
+
+To update the site, commit your changes to `main`; GitHub Pages republishes automatically. The browser needs Internet access to retrieve the MediaPipe model and Google Fonts on first use.
+
+## Visual design
+
+The interface uses an editorial product layout: a charcoal navigation rail, off-white workspace, restrained blue highlights, and a dark, high-contrast canvas. The rest of the page stays visually quiet so the drawing activity remains the focus. All styles are in `styles.css`; there is no CSS framework.
 
 ## Run it on your computer
 
