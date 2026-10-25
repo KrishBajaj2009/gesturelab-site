@@ -163,9 +163,9 @@ export class HandCamera {
     if (!points) return;
     const links = [[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
     const xy = p => [ (1 - p.x) * w, p.y * h ];
-    ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(112,235,192,.85)';
+    ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,157,91,.9)';
     for (const [a,b] of links) { ctx.beginPath(); ctx.moveTo(...xy(points[a])); ctx.lineTo(...xy(points[b])); ctx.stroke(); }
-    points.forEach((point, i) => { const [x,y] = xy(point); ctx.beginPath(); ctx.arc(x,y, i === 8 ? 5 : 2.4, 0, Math.PI*2); ctx.fillStyle = i === 8 ? '#ffffff' : '#86e5c4'; ctx.fill(); });
-    if (this.pinching) { const [x,y] = xy(points[8]); ctx.beginPath(); ctx.arc(x,y,14,0,Math.PI*2); ctx.strokeStyle='#f9da98';ctx.lineWidth=2;ctx.stroke(); }
+    points.forEach((point, i) => { const [x,y] = xy(point); ctx.beginPath(); ctx.arc(x,y, i === 8 ? 5 : 2.4, 0, Math.PI*2); ctx.fillStyle = i === 8 ? '#ffffff' : '#78ADFF'; ctx.fill(); });
+    if (this.pinching) { const [x,y] = xy(points[8]); ctx.beginPath(); ctx.arc(x,y,14,0,Math.PI*2); ctx.strokeStyle='#FFAA67';ctx.lineWidth=2;ctx.stroke(); }
   }
 }
