@@ -4,10 +4,10 @@ export const HEIGHT = 560;
 const CENTER = { x: 450, y: 280 };
 
 export const LEVELS = [
-  { id: 'circle', name: 'Circle', title: 'Trace a Circle', emoji: '◯', subtitle: 'A perfect loop', description: 'Follow the guide in one continuous line.', color: '#BF521B' },
-  { id: 'triangle', name: 'Triangle', title: 'Trace a Triangle', emoji: '△', subtitle: 'Three corners', description: 'Find all three corners and connect the edges.', color: '#285DAD' },
-  { id: 'square', name: 'Square', title: 'Trace a Square', emoji: '□', subtitle: 'Four right angles', description: 'Trace each straight edge and turn at the corners.', color: '#B85A25' },
-  { id: 'star', name: 'Star', title: 'Trace a Star', emoji: '☆', subtitle: 'A five-point challenge', description: 'Trace the full star outline without skipping a point.', color: '#3765A4' },
+  { id: 'circle', name: 'Circle', title: 'Trace a Circle', emoji: '◯', subtitle: 'A perfect loop', description: 'Follow the guide in one continuous line.', color: '#FF914D' },
+  { id: 'triangle', name: 'Triangle', title: 'Trace a Triangle', emoji: '△', subtitle: 'Three corners', description: 'Find all three corners and connect the edges.', color: '#93BEFF' },
+  { id: 'square', name: 'Square', title: 'Trace a Square', emoji: '□', subtitle: 'Four right angles', description: 'Trace each straight edge and turn at the corners.', color: '#FFB57D' },
+  { id: 'star', name: 'Star', title: 'Trace a Star', emoji: '☆', subtitle: 'A five-point challenge', description: 'Trace the full star outline without skipping a point.', color: '#B7D2FF' },
 ];
 
 export function makePath(id) {
