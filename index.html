@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0a1020" />
+  <meta name="description" content="GestureLab is an interactive geometry studio. Trace shapes using hand gestures, a mouse, or touch." />
+  <title>GestureLab — Draw beyond the screen</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar" aria-label="Site navigation">
+      <a href="#studio" class="brand" aria-label="GestureLab home">
+        <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M10 21V10a2 2 0 0 1 4 0v6-9a2 2 0 0 1 4 0v9-7a2 2 0 0 1 4 0v8-4a2 2 0 0 1 4 0v8c0 5-4 8-9 8h-2c-3 0-5-2-7-6l-2-4a2.3 2.3 0 0 1 4-2l3 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></span>
+        <span>Gesture<span class="text-mint">Lab</span><small>INTERACTIVE LEARNING</small></span>
+      </a>
+      <div class="sidebar-label">THE LAB</div>
+      <nav class="nav-links">
+        <a href="#studio" class="active"><span class="nav-symbol">◈</span> Playground <span class="nav-chevron">›</span></a>
+        <a href="#how-it-works"><span class="nav-symbol">⌁</span> How it works</a>
+      </nav>
+      <div class="sidebar-label levels-title">CHOOSE A CHALLENGE</div>
+      <div id="levelList" class="level-list" aria-label="Choose a shape level"></div>
+      <div class="sidebar-bottom">
+        <div class="mini-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
+        <p>Learning feels different<br />when you can <em>move it.</em></p>
+        <span class="version">GESTURELAB 1.0 · MADE FOR ALL MINDS</span>
+      </div>
+    </aside>
+
+    <main id="studio" class="main">
+      <header class="topbar">
+        <div><span class="breadcrumbs">THE LAB <span>/</span> PLAYGROUND</span></div>
+        <div class="top-right"><span class="online-dot"></span> <span id="appStatus">Ready to create</span><button id="helpBtn" class="help-btn" aria-label="Open instructions">?</button></div>
+      </header>
+      <div class="content">
+        <div class="hero-kicker"><span class="eyebrow-line"></span> A NEW WAY TO INTERACT</div>
+        <section class="hero">
+          <div><h1>Think it. <span>Trace it.</span><br />Bring it to life.</h1><p>Geometry in motion. Use your hand—or a pointer—to trace shapes, sharpen spatial skills, and turn movement into math.</p></div>
+          <div class="hero-decor" aria-hidden="true"><div class="orbit o1"></div><div class="orbit o2"></div><div class="orbit o3"></div><span class="deco-dot one"></span><span class="deco-dot two"></span></div>
+        </section>
+        <section class="workspace" aria-label="Interactive game">
+          <div class="workspace-toolbar">
+            <div><div class="workspace-eyebrow">CURRENT CHALLENGE <span id="lessonIndex">01 / 04</span></div><h2 id="levelTitle">Trace a Circle</h2><p id="levelDescription">Follow the glowing guide in one continuous motion.</p></div>
+            <div class="toolbar-actions"><button id="clearBtn" class="icon-button" title="Try again" aria-label="Clear drawing"><svg viewBox="0 0 24 24" fill="none"><path d="M3 11a9 9 0 1 1 2.5 6.3M3 4v7h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button id="nextBtn" class="button button-primary">Next level <span aria-hidden="true">→</span></button></div>
+          </div>
+          <div class="canvas-wrap" id="canvasWrap">
+            <div class="canvas-grid" aria-hidden="true"></div>
+            <canvas id="stage" width="900" height="560" aria-label="Trace the shape using a mouse, touch, or a webcam pinch gesture"></canvas>
+            <div class="canvas-top"><span class="canvas-chip"><span class="pulse-dot"></span><span id="canvasMode">MOUSE / TOUCH MODE</span></span><span id="canvasHint" class="canvas-hint">PRESS & DRAG TO TRACE</span></div>
+            <div class="canvas-bottom"><span id="liveIndicator">◉ Ready when you are</span><span class="axis-label">X · Y COORDINATE SPACE</span></div>
+            <div id="resultOverlay" class="result-overlay hidden" role="status" aria-live="polite"><span class="result-eyebrow">CHALLENGE COMPLETE</span><strong id="resultScore">0<span>%</span></strong><span id="resultMessage">Nice work!</span><span id="resultDetails"></span><div class="result-buttons"><button id="resultRetry" class="button button-ghost">Try again</button><button id="resultNext" class="button button-primary">Next challenge →</button></div></div>
+          </div>
+          <div class="workspace-footer"><div class="instruction-key"><span class="key-icon">✧</span><span id="footerInstruction">Press, trace the guide, then release to score.</span></div><div class="footer-actions"><span id="strokeMetric">0 POINTS</span><span class="divider-dot">•</span><span id="coverageMetric">0% COVERAGE</span></div></div>
+        </section>
+        <section class="stats-row" aria-label="Progress statistics"><div class="stat"><div class="stat-icon">◇</div><div><small>SHAPES ATTEMPTED</small><strong id="totalAttempts">0</strong></div></div><div class="stat"><div class="stat-icon">✦</div><div><small>PERSONAL BEST</small><strong id="bestScore">—</strong></div></div><div class="stat"><div class="stat-icon">◷</div><div><small>LEVELS EXPLORED</small><strong id="levelsExplored">0 <span>/ 4</span></strong></div></div></section>
+        <section id="how-it-works" class="guide-section"><div class="section-heading"><span>THE BASICS</span><h2>Simple gestures. Big possibilities.</h2></div><div class="guide-cards"><article><div class="guide-icon">☝</div><h3>01 · Move</h3><p>Hold one hand in camera view. Your index fingertip becomes a digital pen.</p></article><article><div class="guide-icon">◎</div><h3>02 · Pinch</h3><p>Bring thumb and index finger together. Move while pinching to trace.</p></article><article><div class="guide-icon">✧</div><h3>03 · Learn</h3><p>Release to see your accuracy, shape coverage, and a personal-best score.</p></article></div></section>
+      </div>
+    </main>
+
+    <aside class="control-panel" aria-label="Game controls">
+      <div class="panel-heading"><span>CONTROL CENTER</span><span class="panel-live"><i></i> LOCAL SESSION</span></div>
+      <div class="panel-block"><h3>Choose your input</h3><p class="side-subtitle">Both modes play the exact same game.</p><div class="mode-toggle" role="group" aria-label="Input mode"><button id="mouseMode" class="selected" aria-pressed="true">↖ <span>Pointer</span></button><button id="cameraMode" aria-pressed="false">◉ <span>Camera</span></button></div></div>
+      <div class="panel-block camera-block"><div class="panel-line"><h3>Live hand tracking</h3><span id="cameraPill" class="camera-pill">OFFLINE</span></div><div class="preview" id="preview"><video id="webcam" autoplay playsinline muted aria-label="Your webcam preview"></video><canvas id="handCanvas" width="320" height="240" aria-hidden="true"></canvas><div id="previewPlaceholder" class="preview-placeholder"><span>✋</span><strong>Camera is off</strong><small>Enable camera mode to start tracking</small></div><span class="preview-corner tl"></span><span class="preview-corner tr"></span><span class="preview-corner bl"></span><span class="preview-corner br"></span></div><p id="cameraMessage" class="camera-message">Your video stays on your device. The app does not upload video frames.</p><button id="calibrateBtn" class="button button-outline full" disabled>◈ Calibrate pinch</button><button id="stopCameraBtn" class="button button-small full hidden">Turn camera off</button></div>
+      <div class="panel-block settings-block"><h3>Make it yours</h3><label class="setting-label" for="smoothing">Cursor responsiveness <span id="smoothValue">Balanced</span></label><input id="smoothing" type="range" min="1" max="5" value="3" /><div class="setting-range"><span>Steady</span><span>Fast</span></div><label class="toggle-row"><span><strong>High contrast</strong><small>Bolder drawing guides</small></span><input id="contrast" type="checkbox" role="switch" /></label><label class="toggle-row"><span><strong>Reduced motion</strong><small>Fewer visual effects</small></span><input id="reducedMotion" type="checkbox" role="switch" /></label></div>
+      <div class="panel-block progress-block"><div class="panel-line"><h3>Your personal bests</h3><span class="muted-small">ON THIS DEVICE</span></div><div id="progressList" class="progress-list"></div><button id="resetProgress" class="text-button">Reset local scores</button></div>
+      <div class="privacy-note"><span class="lock-icon">♧</span><span><strong>Designed for privacy</strong><br />No login, database, or video uploads. Scores save locally in your browser.</span></div>
+    </aside>
+  </div>
+
+  <dialog id="helpDialog" class="help-dialog" aria-labelledby="dialogTitle"><form method="dialog"><button class="modal-close" aria-label="Close help">✕</button><div class="modal-kicker">QUICK START</div><h2 id="dialogTitle">Welcome to GestureLab</h2><p>Trace a glowing shape. Your score combines how closely you stay near the guide and how much of its outline you cover.</p><ol><li><strong>Try it now:</strong> Press and drag with your mouse, or draw using touch on a phone/tablet.</li><li><strong>Hands-free mode:</strong> Choose Camera, approve camera permission, then pinch your thumb and index finger together to draw.</li><li><strong>Calibrate:</strong> Pinch comfortably and press Calibrate pinch. Hold that gesture until calibration finishes.</li><li><strong>Release to score:</strong> Follow the complete outline, then release the pinch or pointer.</li></ol><p class="modal-footnote">Camera access requires HTTPS or localhost. MediaPipe's model is downloaded when you first enable Camera. Your camera frames are processed in your browser; the third-party MediaPipe library may send usage metrics.</p><button value="close" class="button button-primary full">Let's create →</button></form></dialog>
+</body>
+</html>
