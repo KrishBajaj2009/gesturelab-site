@@ -4,30 +4,37 @@ Gesture is a responsive, privacy-conscious educational game in which players tra
 
 ## Features
 
-- Four playable challenges: circle, triangle, square, and five-point star
+- Four original challenges: circle, triangle, square, and five-point star
+- Four secret challenges: diamond, hexagon, heart, and infinity (unlocked through scores)
 - Live Google MediaPipe tracking of 21 hand landmarks
+- GPU-first inference with CPU fallback; adaptive cursor smoothing and frame-confirmed pinch gestures
+- Grace period for short detection gaps, with unfinished strokes discarded on longer tracking loss
 - Pinch (thumb tip and index tip) to draw; release to score
 - Pinch calibration with a simple button beside the camera
 - Algorithmic scoring: drawing precision, guide coverage, and excessive-stroke penalty
 - Mouse and touch fallback if camera permission is unavailable
 - Personal-best scores and number of attempts saved to this browser only
-- Four level buttons above a two-column game and camera layout, responsive on smaller screens
+- Original level buttons above a two-column game and camera layout; earned secret buttons appear progressively
 - Arial font across the interface and canvas
 - Clean error handling when camera/model access fails
 
 ## Files
 
 ```
-gesturelab-site/
+zip2026/
 ├── index.html      # All page layout and accessible controls
 ├── styles.css      # Responsive styling
 ├── app.js          # Interaction and gameplay controller
-├── shapes.js       # Pure shape definitions and math scoring
-├── vision.js       # MediaPipe webcam tracking + pinch calibration
+├── shapes.js       # Eight shape definitions and math scoring
+├── unlocks.js      # Achievement thresholds for secret levels
+├── tracking.js     # Pure gesture smoothing and pinch debounce helpers
+├── vision.js       # MediaPipe webcam tracking + calibration and recovery
 ├── favicon.svg     # App icon
 ├── package.json    # Optional local test command
 ├── tests/
-│   └── scoring.test.mjs
+│   ├── scoring.test.mjs
+│   ├── unlocks.test.mjs
+│   └── tracking.test.mjs
 └── README.md       # This file
 ```
 
@@ -49,7 +56,7 @@ To update the site, commit your changes to `main`; GitHub Pages republishes auto
 
 The website is named **Gesture**. Its navy page (`#0C1D41`), darker header (`#061430`), and orange highlights (`#FF914D`) are sampled from the user's ZIP Stocks screenshot. The cards and drawing board also use dark navy, with light text and visible tracing guides. Arial is used throughout.
 
-The site opens straight into the game. Four level choices sit above a wide drawing canvas on the left and a live camera feed on the right. The old sidebar, statistics, promotional banner and settings panel have been removed. The interface uses Arial and no remote font service.
+The site opens straight into the game. Four starting levels sit above a wide drawing canvas on the left and a live camera feed on the right. Up to four additional secret levels appear after scoring milestones. The old sidebar, statistics, promotional banner and settings panel have been removed. The interface uses Arial and no remote font service.
 
 The page attempts to request camera permission when it opens. A browser might block an automatic permission prompt; in that case a clearly labeled **Enable camera** button appears. The game remains playable using a pointer or touchscreen when the camera is unavailable.
 
@@ -80,8 +87,6 @@ Open this folder in VS Code and use a local server such as its Live Server exten
 Node.js 18 or newer is recommended. No npm installation is needed:
 
 ```bash
-node --test tests/scoring.test.mjs
-# or
 npm test
 ```
 
@@ -91,8 +96,9 @@ npm test
 2. Select Circle, Triangle, Square or Star from the level row.
 3. Show your hand to the camera, move your index finger, and pinch thumb and index finger to start tracing. Release to get a score.
 4. If pinch detection is unreliable, use **Calibrate pinch** while touching your thumb and index finger together.
-5. Use **Reset** or **Next level** to continue. Saved best scores appear next to the level names.
-6. If the camera is denied or unavailable, drag on the canvas with a mouse, trackpad or touch to play.
+5. Each original level scoring **70% or higher** unlocks another bonus shape, in this order: Diamond, Hexagon, Heart, Infinity. Secrets are invisible until earned. Previously saved best scores count.
+6. Use **Reset** or **Next level** to continue. Saved best scores appear next to the level names.
+7. If the camera is denied or unavailable, drag on the canvas with a mouse, trackpad or touch to play.
 
 ## Scoring math
 
