@@ -70,7 +70,7 @@ function draw() {
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-  ctx.strokeStyle = 'rgba(32,49,77,.065)';
+  ctx.strokeStyle = 'rgba(191,213,249,.09)';
   ctx.lineWidth = 1;
   for (let x = 0; x <= WIDTH; x += 40) {
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, HEIGHT); ctx.stroke();
@@ -96,29 +96,29 @@ function draw() {
   ctx.strokeStyle = level().color;
   ctx.lineWidth = 3;
   ctx.stroke();
-  ctx.fillStyle = '#4d607d';
+  ctx.fillStyle = '#d8e4f8';
   ctx.font = 'bold 13px Arial, sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('START', start.x, start.y - 29);
 
   if (state.points.length) {
-    drawLine(state.points, '#223e66', 4.5);
+    drawLine(state.points, '#f4f7ff', 4.5);
     const last = state.points.at(-1);
     ctx.beginPath();
     ctx.arc(last.x, last.y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = '#223e66';
+    ctx.fillStyle = '#f4f7ff';
     ctx.fill();
   }
 
   if (state.cursor && state.cameraOn && !state.pointing && !state.result) {
     ctx.beginPath();
     ctx.arc(state.cursor.x, state.cursor.y, state.pinching ? 20 : 14, 0, Math.PI * 2);
-    ctx.strokeStyle = state.pinching ? '#d05d20' : '#244d92';
+    ctx.strokeStyle = state.pinching ? '#ff914d' : '#a2c7ff';
     ctx.lineWidth = 2.5;
     ctx.stroke();
     ctx.beginPath();
     ctx.arc(state.cursor.x, state.cursor.y, 3, 0, Math.PI * 2);
-    ctx.fillStyle = '#244d92';
+    ctx.fillStyle = '#a2c7ff';
     ctx.fill();
   }
 }
