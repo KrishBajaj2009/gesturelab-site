@@ -42,10 +42,10 @@ function pointOnCanvas(e) {
   };
 }
 function messageForScore(score) {
-  if (score >= 93) return 'Incredible precision!';
-  if (score >= 80) return 'Beautifully done!';
-  if (score >= 60) return 'Nice work — keep refining.';
-  return 'Every attempt teaches you something.';
+  if (score >= 93) return 'Excellent tracing.';
+  if (score >= 80) return 'Nice work.';
+  if (score >= 60) return 'Getting closer.';
+  return 'Try another pass.';
 }
 function changeLevel(index) {
   if (!Number.isInteger(index) || index < 0 || index >= LEVELS.length) return;
@@ -104,7 +104,7 @@ function finishDrawing() {
   $('resultDetails').textContent = `${result.precision}% precision  ·  ${result.coverage}% outline covered`;
   $('resultNext').textContent = state.level === LEVELS.length - 1 ? 'Back to circle ↺' : 'Next challenge →';
   $('resultOverlay').classList.remove('hidden');
-  updateInstruction('Challenge complete! Retry to improve your score.');
+  updateInstruction('Trace again to improve your score.');
   draw();
 }
 function updateMetrics() {
@@ -133,26 +133,26 @@ function draw() {
   ctx.setTransform(pixelRatio,0,0,pixelRatio,0,0);
   ctx.clearRect(0,0,WIDTH,HEIGHT);
   const target = currentTarget();
-  const targetColor = state.highContrast ? '#e6fff6' : currentLevel().color;
-  ctx.save(); ctx.globalAlpha=.09;
-  drawPolyline(target,targetColor,34,46);
+  const targetColor = state.highContrast ? '#ffffff' : currentLevel().color;
+  ctx.save(); ctx.globalAlpha=.06;
+  drawPolyline(target,targetColor,26,0);
   ctx.restore();
-  ctx.save();ctx.globalAlpha=.16;drawPolyline(target,targetColor,14,12);ctx.restore();
-  drawPolyline(target,targetColor,state.highContrast?5:3.5,state.reducedMotion?0:13,[14,13]);
+  ctx.save();ctx.globalAlpha=.12;drawPolyline(target,targetColor,12,0);ctx.restore();
+  drawPolyline(target,targetColor,state.highContrast?5:3.5,0,[12,12]);
   // Target start point helps learners close loops.
   const start = target[0];
-  ctx.beginPath();ctx.arc(start.x,start.y,9,0,Math.PI*2);ctx.fillStyle='#fffdf2';ctx.fill();
+  ctx.beginPath();ctx.arc(start.x,start.y,9,0,Math.PI*2);ctx.fillStyle='#ffffff';ctx.fill();
   ctx.beginPath();ctx.arc(start.x,start.y,17,0,Math.PI*2);ctx.strokeStyle=targetColor;ctx.lineWidth=2;ctx.stroke();
-  ctx.fillStyle=state.highContrast?'#effff9':'#95b6c9';ctx.font='700 13px DM Sans, sans-serif';ctx.textAlign='center';ctx.fillText('START',start.x,start.y-29);
+  ctx.fillStyle=state.highContrast?'#ffffff':'#aabed3';ctx.font='600 13px DM Sans, sans-serif';ctx.textAlign='center';ctx.fillText('START',start.x,start.y-29);
   if (state.points.length) {
-    ctx.save();ctx.globalAlpha=.18;drawPolyline(state.points,'#baffd8',18,25);ctx.restore();
-    drawPolyline(state.points,'#c0ffe0',state.highContrast?7:5,state.reducedMotion?0:14);
+    ctx.save();ctx.globalAlpha=.12;drawPolyline(state.points,'#9cbaff',14,0);ctx.restore();
+    drawPolyline(state.points,'#e1ebff',state.highContrast?7:5,0);
     const end=state.points.at(-1);ctx.beginPath();ctx.arc(end.x,end.y,5,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
   }
   if (state.cursor && state.mode==='camera' && !state.lastResult) {
     const p=state.cursor;
-    ctx.beginPath();ctx.arc(p.x,p.y,state.cameraPinched?22:15,0,Math.PI*2);ctx.strokeStyle=state.cameraPinched?'#ffe09d':'#7bedc8';ctx.lineWidth=3;ctx.shadowColor='#7beacc';ctx.shadowBlur=16;ctx.stroke();ctx.shadowBlur=0;
-    ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);ctx.fillStyle='#f2fff9';ctx.fill();
+    ctx.beginPath();ctx.arc(p.x,p.y,state.cameraPinched?22:15,0,Math.PI*2);ctx.strokeStyle=state.cameraPinched?'#ffd594':'#9cbaff';ctx.lineWidth=3;ctx.shadowBlur=0;ctx.stroke();
+    ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);ctx.fillStyle='#ffffff';ctx.fill();
   }
 }
 
@@ -238,7 +238,7 @@ function choosePointer() {
   $('calibrateBtn').disabled=true;$('stopCameraBtn').classList.add('hidden');
   $('canvasMode').textContent='MOUSE / TOUCH MODE';$('canvasHint').textContent='PRESS & DRAG TO TRACE';$('liveIndicator').textContent='◉ Ready when you are';
   updateInstruction('Press, trace the guide, then release to score.');
-  setAppStatus('Ready to create');setModeButtons();draw();
+  setAppStatus('Ready to draw');setModeButtons();draw();
 }
 function setModeButtons() {
   const mouse=state.mode==='pointer';
