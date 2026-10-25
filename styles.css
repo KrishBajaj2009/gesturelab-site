@@ -1,4 +1,4 @@
-/* Gesture — dark navy interface inspired by the ZIP Stocks palette. */
+/* Gesture — navy/orange interface, Amazon-inspired bold hierarchy and soft corners. */
 :root {
   font-family: Arial, Helvetica, sans-serif;
   color: #f7f9ff;
@@ -14,6 +14,9 @@
   --muted: #a7b5ce;
   --orange: #ff914d;
   --blue: #88b8ff;
+  --heading-font: 'Arial Black', Arial, Helvetica, sans-serif;
+  --corner-card: 18px;
+  --corner-input: 12px;
 }
 * { box-sizing: border-box; }
 html { background: var(--page); }
@@ -38,14 +41,14 @@ button:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
   background: var(--header);
   border-bottom: 1px solid #253859;
 }
-.brand { font-size: 26px; font-weight: 800; letter-spacing: -.9px; line-height: 1.1; }
-.identity p { margin: 8px 0 0; color: #aebbd1; font-size: 13px; }
+.brand { font-family: var(--heading-font); font-size: 29px; font-weight: 900; letter-spacing: -1.1px; line-height: 1.06; }
+.identity p { margin: 8px 0 0; color: #aebbd1; font-size: 13px; line-height: 1.45; }
 .header-status { color: #c6d2e5; font-size: 12px; text-align: right; }
 
 /* The level row is the only navigation on the page. */
 .levels { margin: 30px 0 24px; }
 .section-label { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; gap: 12px; }
-.section-label h1 { margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -.3px; }
+.section-label h1 { margin: 0; font-family: var(--heading-font); font-size: 23px; font-weight: 900; letter-spacing: -.65px; line-height: 1.2; }
 .section-label span { color: #899fbd; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
 .level-list { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
 .level-item {
@@ -57,7 +60,7 @@ button:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
   padding: 15px 16px;
   background: var(--panel-alt);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--corner-card);
   color: var(--text);
   text-align: left;
   transition: border-color .15s, background-color .15s;
@@ -79,14 +82,14 @@ button:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
   flex: 0 0 47px;
   width: 47px;
   height: 47px;
-  border-radius: 7px;
+  border-radius: 12px;
   background: #1b3769;
   color: #94bdff;
   font-size: 32px;
 }
 .level-item:nth-child(even) .level-shape { background: #42344a; color: #ffac77; }
-.level-name { margin-bottom: 5px; font-size: 15px; font-weight: 700; }
-.level-sub { color: #a5b6ce; font-size: 11px; }
+.level-name { margin-bottom: 5px; font-family: var(--heading-font); font-size: 15px; font-weight: 900; letter-spacing: -.35px; line-height: 1.25; }
+.level-sub { color: #a5b6ce; font-size: 11px; line-height: 1.4; }
 .level-best { color: #ffad77; font-size: 10px; font-weight: 700; margin-left: auto; align-self: flex-end; }
 
 /* Two-column play area: tracing on the left, camera on the right. */
@@ -100,7 +103,7 @@ button:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
   min-width: 0;
   overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--corner-card);
   background: var(--panel);
 }
 .panel-heading, .camera-heading {
@@ -112,17 +115,17 @@ button:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
   gap: 16px;
 }
 .eyebrow { color: #91baff; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
-.panel-heading h2, .camera-heading h2 { margin: 6px 0 3px; color: var(--text); font-size: 22px; line-height: 1.2; letter-spacing: -.5px; }
+.panel-heading h2, .camera-heading h2 { margin: 7px 0 4px; color: var(--text); font-family: var(--heading-font); font-size: 25px; font-weight: 900; line-height: 1.15; letter-spacing: -.7px; }
 .panel-heading p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .game-actions { display: flex; gap: 8px; flex-shrink: 0; }
 .button {
   padding: 11px 14px;
   border: 1px solid #45618b;
-  border-radius: 6px;
+  border-radius: var(--corner-input);
   background: #1a345d;
   color: var(--text);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 800;
 }
 .button:hover:not(:disabled) { background: #26446e; }
 .button-subtle { background: #1b345b; color: #f3f6ff; }
@@ -138,7 +141,7 @@ button:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
   aspect-ratio: 900/560;
   background: #0e2144;
   border: 1px solid #334a70;
-  border-radius: 7px;
+  border-radius: 15px;
   touch-action: none;
 }
 #stage { display: block; position: relative; z-index: 1; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
@@ -178,19 +181,19 @@ button:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
   background: rgba(6,20,48,.97);
 }
 .result-label { color: var(--orange); font-size: 11px; letter-spacing: 1px; font-weight: 700; }
-.result-score { margin: 6px 0; font-size: clamp(62px,8vw,104px); font-weight: 800; line-height: 1.15; letter-spacing: -4px; }
+.result-score { margin: 6px 0; font-family: var(--heading-font); font-size: clamp(62px,8vw,104px); font-weight: 900; line-height: 1.15; letter-spacing: -4px; }
 .result-score span { color: var(--orange); font-size: .5em; }
-#resultMessage { font-size: 16px; }
+#resultMessage { font-family: var(--heading-font); font-size: 19px; font-weight: 900; letter-spacing: -.3px; }
 #resultDetails { color: #bfcee5; font-size: 12px; margin: 10px 0; }
 .result-buttons { display: flex; gap: 10px; margin-top: 14px; }
 
 /* Camera stays visible in the right column. */
 .camera-panel { padding-bottom: 20px; }
 .camera-heading { min-height: 102px; }
-.camera-status { padding: 6px 8px; background: #443925; border-radius: 5px; color: #ffd18c; font-size: 10px; font-weight: 700; }
+.camera-status { padding: 7px 10px; background: #443925; border-radius: 10px; color: #ffd18c; font-size: 10px; font-weight: 800; }
 .camera-status.active { background: #174c45; color: #9becd2; }
 .camera-status.loading { background: #443925; color: #ffd18c; }
-.preview { position: relative; overflow: hidden; margin: 0 15px; aspect-ratio: 4/3; border-radius: 7px; background: #0a1d3d; }
+.preview { position: relative; overflow: hidden; margin: 0 15px; aspect-ratio: 4/3; border-radius: 16px; background: #0a1d3d; }
 .preview video, .preview canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .preview video { transform: scaleX(-1); }
 .preview canvas { pointer-events: none; }
