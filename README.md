@@ -7,11 +7,11 @@ GestureLab is a responsive, privacy-conscious educational game in which players 
 - Four playable challenges: circle, triangle, square, and five-point star
 - Live Google MediaPipe tracking of 21 hand landmarks
 - Pinch (thumb tip and index tip) to draw; release to score
-- Adjustable cursor responsiveness and pinch calibration
+- Pinch calibration with a simple button beside the camera
 - Algorithmic scoring: drawing precision, guide coverage, and excessive-stroke penalty
-- Mouse and touch fallback; high-contrast and reduced-motion options
+- Mouse and touch fallback if camera permission is unavailable
 - Personal-best scores and number of attempts saved to this browser only
-- Responsive game interface with four selectable level cards, designed for desktop, tablet, and phone
+- Four level buttons above a two-column game and camera layout, responsive on smaller screens
 - Arial font across the interface and canvas
 - Clean error handling when camera/model access fails
 
@@ -43,11 +43,13 @@ This repository is set up as a static site, so no build pipeline or backend is n
 
 The published address is `https://krishbajaj2009.github.io/zip2026/`. All HTML, CSS, and JavaScript paths are relative so the site works under the repository path.
 
-To update the site, commit your changes to `main`; GitHub Pages republishes automatically. The browser needs Internet access to retrieve the MediaPipe model and Google Fonts on first use.
+To update the site, commit your changes to `main`; GitHub Pages republishes automatically. The browser needs Internet access to retrieve the MediaPipe tracking library and model on first use. Arial is provided by the operating system.
 
 ## Visual design
 
-The interface combines a compact product-style navigation rail with a playful game hub: illustrated level tiles, a prominent tracing canvas, a score summary, and a right-hand camera/settings panel. Every visible UI font uses **Arial**, including canvas labels. Layout and styling live in `index.html` and `styles.css`; no CSS framework or remote font library is used. The interface is an original design, not a copy of another game's artwork.
+The site opens straight into the game. Four level choices sit above a wide drawing canvas on the left and a live camera feed on the right. The old sidebar, statistics, promotional banner and settings panel have been removed. The interface uses Arial and no remote font service.
+
+The page attempts to request camera permission when it opens. A browser might block an automatic permission prompt; in that case a clearly labeled **Enable camera** button appears. The game remains playable using a pointer or touchscreen when the camera is unavailable.
 
 ## Run it on your computer
 
@@ -63,7 +65,7 @@ py -m http.server 8000
 ```
 
 3. Open [http://localhost:8000](http://localhost:8000).
-4. Pointer mode works immediately. Click Camera and accept browser permission to test MediaPipe.
+4. The site requests camera permission automatically. Accept it to use hand tracking; pointer input also works.
 
 Do not open `index.html` directly via `file://`: ES modules and camera permission may fail. Use localhost or deployed HTTPS.
 
@@ -83,11 +85,12 @@ npm test
 
 ## How to play
 
-1. Choose any shape level using the sidebar.
-2. **Pointer mode:** hold the mouse button or touch the screen and trace the entire dashed target outline. Release to get a score.
-3. **Camera mode:** enable camera, show one hand, move your index finger to control the cursor, then pinch thumb + index finger to draw. Release to score.
-4. **Calibrate:** press Calibrate pinch while camera is active, touch thumb and index fingertip together for 2 seconds, then release. Your threshold adjusts for your hand size/position. Adjust responsiveness as needed.
-5. Use Retry or Next level. Results save locally only.
+1. Open the site and allow camera access when your browser prompts for it.
+2. Select Circle, Triangle, Square or Star from the level row.
+3. Show your hand to the camera, move your index finger, and pinch thumb and index finger to start tracing. Release to get a score.
+4. If pinch detection is unreliable, use **Calibrate pinch** while touching your thumb and index finger together.
+5. Use **Reset** or **Next level** to continue. Saved best scores appear next to the level names.
+6. If the camera is denied or unavailable, drag on the canvas with a mouse, trackpad or touch to play.
 
 ## Scoring math
 
@@ -119,7 +122,7 @@ Documentation: https://developers.google.com/edge/mediapipe/solutions/vision/han
 
 ## Troubleshooting
 
-- **Camera button doesn't work:** use HTTPS or `localhost`, grant camera permission, and check that the camera isn't being used by another app.
+- **Camera does not start:** use HTTPS or `localhost`, grant camera permission, and use **Enable camera** to retry if permission was previously denied.
 - **Model does not load:** check your Internet connection or a school network's blocks on jsDelivr / Google model storage; Pointer mode works without the model.
 - **Tracking is jumpy:** move into brighter lighting, keep one hand in view, and move cursor responsiveness toward Steady.
 - **Accidental pinch detection:** use Calibrate pinch and release after calibration before drawing.
@@ -128,7 +131,7 @@ Documentation: https://developers.google.com/edge/mediapipe/solutions/vision/han
 
 ## Demo plan for a Congressional App Challenge entry
 
-1. Show the landing page and explain who the app is for (20 seconds).
+1. Show the level choices and explain who the app is for (20 seconds).
 2. Start the webcam, point, pinch, and trace the circle (30–40 seconds).
 3. Release; show the precision/coverage score and progress history (20 seconds).
 4. Show a harder shape and accessibility calibration (20–30 seconds).
