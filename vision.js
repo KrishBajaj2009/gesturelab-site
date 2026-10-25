@@ -1,4 +1,5 @@
 // Google MediaPipe Hand Landmarker runs on-device in the browser.
+import { pinchRatio, nextPinchState, smoothCursor } from './tracking.js';
 const MEDIAPIPE_VERSION = '1.1.1';
 const MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task';
 const WASM_URL = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MEDIAPIPE_VERSION}/wasm`;
@@ -24,6 +25,12 @@ export class HandCamera {
     this.calibration = null;
     this.waitForRelease = false;
     this.generation = 0;
+    this.pinchState = { active: false, closeFrames: 0, openFrames: 0 };
+    this.filteredRatio = null;
+    this.lastSeenAt = 0;
+    this.lastCursorAt = 0;
+    this.trackFrames = 0;
+    this.lostReported = false;
   }
 
   setSpeed(level) { this.speed = [0, 0.14, 0.22, 0.34, 0.48, 0.65][Number(level)] || 0.34; }
@@ -57,19 +64,31 @@ export class HandCamera {
           `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MEDIAPIPE_VERSION}/vision_bundle.mjs`
         );
         const wasm = await FilesetResolver.forVisionTasks(WASM_URL);
-        this.tracker = await HandLandmarker.createFromOptions(wasm, {
-          baseOptions: { modelAssetPath: MODEL_URL, delegate: 'CPU' },
+        const options = delegate => ({
+          baseOptions: { modelAssetPath: MODEL_URL, delegate },
           runningMode: 'VIDEO',
           numHands: 1,
-          minHandDetectionConfidence: 0.55,
+          minHandDetectionConfidence: 0.5,
           minHandPresenceConfidence: 0.5,
           minTrackingConfidence: 0.5
         });
+        try {
+          this.tracker = await HandLandmarker.createFromOptions(wasm, options('GPU'));
+        } catch (gpuError) {
+          // Some computers lack a supported GPU context; CPU remains available.
+          this.tracker = await HandLandmarker.createFromOptions(wasm, options('CPU'));
+        }
       }
       if (token !== this.generation) return false;
       this.running = true;
       this.lastTime = -1;
       this.lastInferenceAt = 0;
+      this.lastSeenAt = 0;
+      this.lastCursorAt = 0;
+      this.filteredRatio = null;
+      this.trackFrames = 0;
+      this.lostReported = false;
+      this.pinchState = { active: false, closeFrames: 0, openFrames: 0 };
       this.loop();
       return true;
     } catch (error) {
@@ -91,6 +110,11 @@ export class HandCamera {
     this.pinchRatio = null;
     this.calibration = null;
     this.waitForRelease = false;
+    this.pinchState = { active: false, closeFrames: 0, openFrames: 0 };
+    this.filteredRatio = null;
+    this.lastSeenAt = 0;
+    this.trackFrames = 0;
+    this.lostReported = false;
     this.onFrame(null, false, false);
   }
 
@@ -106,48 +130,81 @@ export class HandCamera {
     this.raf = requestAnimationFrame(this.loop);
     if (this.video.readyState < 2) return;
     if (this.video.currentTime === this.lastTime) return;
-    if (performance.now() - this.lastInferenceAt < 30) return;
+
+    const now = performance.now();
+    if (now - this.lastInferenceAt < 28) return;
+    const dt = this.lastCursorAt ? now - this.lastCursorAt : 33;
     this.lastTime = this.video.currentTime;
-    this.lastInferenceAt = performance.now();
+    this.lastInferenceAt = now;
+
     try {
-      const result = this.tracker.detectForVideo(this.video, performance.now());
+      const result = this.tracker.detectForVideo(this.video, now);
       const points = result.landmarks?.[0];
+
       if (!points) {
-        this.cursor = null;
-        this.pinching = false;
-        this.pinchRatio = null;
+        this.trackFrames = 0;
         this.drawPreview(null);
-        this.onFrame(null, false, false);
+        // A hand can disappear for a frame or two even when the user stays still.
+        // Do not end a stroke for a brief tracking hiccup.
+        if (this.lastSeenAt && now - this.lastSeenAt >= 220 && !this.lostReported) {
+          this.lostReported = true;
+          this.cursor = null;
+          this.pinching = false;
+          this.filteredRatio = null;
+          this.pinchState = { active: false, closeFrames: 0, openFrames: 0 };
+          this.waitForRelease = true;
+          this.onFrame(null, false, false, 'tracking-lost');
+        }
         return;
       }
-      const measure = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
-      const palm = Math.max(0.01, measure(points[5], points[17]));
-      const ratio = measure(points[4], points[8]) / palm;
-      this.pinchRatio = ratio;
-      const target = { x: Math.max(0, Math.min(1, 1 - points[8].x)), y: Math.max(0, Math.min(1, points[8].y)) };
-      if (!this.cursor) this.cursor = target;
-      else this.cursor = { x: this.cursor.x + (target.x - this.cursor.x) * this.speed, y: this.cursor.y + (target.y - this.cursor.y) * this.speed };
+
+      const rawRatio = pinchRatio(points);
+      if (rawRatio === null) return;
+      this.trackFrames++;
+      this.lastSeenAt = now;
+      this.lostReported = false;
+
+      const target = {
+        x: Math.max(0, Math.min(1, 1 - points[8].x)),
+        y: Math.max(0, Math.min(1, points[8].y))
+      };
+      this.cursor = smoothCursor(this.cursor, target, dt, this.speed);
+      this.lastCursorAt = now;
+
+      this.filteredRatio = this.filteredRatio === null
+        ? rawRatio
+        : 0.55 * this.filteredRatio + 0.45 * rawRatio;
+      this.pinchRatio = this.filteredRatio;
+
       if (this.calibration) {
-        if (ratio < 0.55) this.calibration.values.push(ratio);
-        const elapsed = performance.now() - this.calibration.startedAt;
-        if (elapsed > 1800) {
+        if (rawRatio < 0.55) this.calibration.values.push(rawRatio);
+        if (now - this.calibration.startedAt >= 1800) {
           const samples = this.calibration.values;
           this.calibration = null;
           if (samples.length >= 8) {
-            const avg = samples.reduce((a, b) => a + b, 0) / samples.length;
-            this.threshold = Math.min(0.52, Math.max(0.16, avg * 1.5));
+            const average = samples.reduce((sum, v) => sum + v, 0) / samples.length;
+            this.threshold = Math.min(0.51, Math.max(0.16, average * 1.5));
             this.onFrame(this.cursor, false, true, 'calibrated');
           } else {
             this.onFrame(this.cursor, false, true, 'calibration-failed');
           }
         }
       }
+
       if (this.waitForRelease) {
-        this.pinching = false;
-        if (!this.calibration && ratio > this.threshold + 0.14) this.waitForRelease = false;
+        this.pinchState = { active: false, closeFrames: 0, openFrames: 0 };
+        // A held pinch should not start an accidental new line after calibration
+        // or after the hand was out of view.
+        if (!this.calibration && rawRatio > this.threshold + 0.17) {
+          this.waitForRelease = false;
+        }
+      } else if (this.trackFrames >= 3 && !this.calibration) {
+        this.pinchState = nextPinchState(this.pinchState, this.filteredRatio, this.threshold);
       } else {
-        this.pinching = this.pinching ? ratio < this.threshold + 0.14 : ratio < this.threshold;
+        this.pinchState = { active: false, closeFrames: 0, openFrames: 0 };
       }
+
+      this.pinching = this.pinchState.active;
       this.drawPreview(points);
       this.onFrame(this.cursor, this.pinching, true);
     } catch (error) {
