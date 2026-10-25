@@ -1,5 +1,6 @@
 import { LEVELS, WIDTH, HEIGHT, makePath, evaluateDrawing, distance } from './shapes.js';
 import { HandCamera } from './vision.js';
+import { BASE_LEVEL_COUNT, UNLOCK_SCORE, masteryCount, unlockedLevels, canOpenLevel } from './unlocks.js';
 
 const get = id => document.getElementById(id);
 const stage = get('stage');
@@ -36,7 +37,8 @@ const state = {
   drawing: false,
   points: [],
   cursor: null,
-  result: null
+  result: null,
+  cameraNoticeUntil: 0
 };
 
 const camera = new HandCamera(get('webcam'), get('handCanvas'), handleCameraFrame, handleCameraError);
@@ -45,6 +47,12 @@ camera.setSpeed(3);
 const level = () => LEVELS[state.level];
 const target = () => makePath(level().id);
 const setStatus = text => { get('appStatus').textContent = text; };
+const playableLevels = () => unlockedLevels(LEVELS, scores.bests);
+function nextLevelIndex() {
+  const available = playableLevels();
+  const i = available.findIndex(item => item.id === level().id);
+  return LEVELS.indexOf(available[(i + 1) % available.length]);
+}
 
 function drawLine(points, color, width, dash = []) {
   if (points.length < 2) return;
@@ -126,10 +134,17 @@ function draw() {
 function renderLevels() {
   const list = get('levelList');
   list.replaceChildren();
-  LEVELS.forEach((item, index) => {
+  const available = playableLevels();
+  const mastered = masteryCount(scores.bests, LEVELS);
+  const progress = get('secretProgress');
+  if (progress) progress.textContent = mastered === 0
+    ? `Secret levels unlock when you earn ${UNLOCK_SCORE}% on an original shape.`
+    : `${mastered}/4 secret levels unlocked · Earn ${UNLOCK_SCORE}% on different original shapes to find more.`;
+  available.forEach(item => {
+    const index = LEVELS.indexOf(item);
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'level-item' + (index === state.level ? ' active' : '');
+    button.className = 'level-item' + (index === state.level ? ' active' : '') + (item.secret ? ' secret' : '');
     button.setAttribute('aria-pressed', String(index === state.level));
 
     const shape = document.createElement('span');
@@ -145,6 +160,12 @@ function renderLevels() {
     subtitle.textContent = item.subtitle;
     text.append(name, subtitle);
     button.append(shape, text);
+    if (item.secret) {
+      const badge = document.createElement('span');
+      badge.className = 'secret-tag';
+      badge.textContent = 'SECRET';
+      button.append(badge);
+    }
 
     const best = Number(scores.bests[item.id]);
     if (Number.isFinite(best) && best > 0) {
@@ -169,12 +190,14 @@ function clearDrawing() {
 }
 
 function changeLevel(index) {
+  if (!canOpenLevel(LEVELS[index], scores.bests, LEVELS)) return;
   state.level = index;
   clearDrawing();
-  get('lessonIndex').textContent = `${String(index + 1).padStart(2, '0')} / 04`;
+  const available = playableLevels();
+  get('lessonIndex').textContent = `${String(available.findIndex(item => item.id === level().id) + 1).padStart(2, '0')} / ${String(available.length).padStart(2, '0')}`;
   get('levelTitle').textContent = level().title;
   get('levelDescription').textContent = level().description;
-  get('nextBtn').textContent = index === LEVELS.length - 1 ? 'First level ↻' : 'Next level →';
+  get('nextBtn').textContent = nextLevelIndex() === 0 ? 'First level ↻' : 'Next level →';
   scores.visited = [...new Set([...scores.visited, level().id])];
   saveScores();
   renderLevels();
@@ -185,7 +208,7 @@ function changeLevel(index) {
 }
 
 function nextLevel() {
-  changeLevel((state.level + 1) % LEVELS.length);
+  changeLevel(nextLevelIndex());
 }
 
 function addPoint(point) {
@@ -221,17 +244,20 @@ function endDrawing() {
     return;
   }
 
+  const previouslyUnlocked = playableLevels().length;
   state.result = result;
   scores.attempts++;
   scores.bests[level().id] = Math.max(scores.bests[level().id] || 0, result.score);
   saveScores();
   renderLevels();
+  const newSecret = playableLevels()[previouslyUnlocked];
   get('resultScore').innerHTML = result.score + '<span>%</span>';
-  get('resultMessage').textContent = result.score >= 90
-    ? 'Great tracing!'
+  get('resultMessage').textContent = newSecret?.secret
+    ? `Secret unlocked: ${newSecret.name}!`
+    : result.score >= 90 ? 'Great tracing!'
     : result.score >= 65 ? 'Nice work!' : 'Give it another try.';
   get('resultDetails').textContent = result.precision + '% precision · ' + result.coverage + '% coverage';
-  get('resultNext').textContent = state.level === LEVELS.length - 1 ? 'First level ↻' : 'Next level →';
+  get('resultNext').textContent = nextLevelIndex() === 0 ? 'First level ↻' : 'Next level →';
   get('resultOverlay').classList.remove('hidden');
   get('footerInstruction').textContent = 'Try again to beat your score.';
   draw();
@@ -271,15 +297,30 @@ stage.addEventListener('pointercancel', () => {
 function handleCameraFrame(point, pinch, detected, event) {
   if (!state.cameraOn) return;
 
+  if (event === 'tracking-lost') {
+    state.cursor = null;
+    state.pinching = false;
+    if (state.drawing && !state.pointing) {
+      // Never score an unfinished shape when the webcam temporarily loses a hand.
+      clearDrawing();
+      get('footerInstruction').textContent = 'Tracking paused. Show your hand and pinch again.';
+    }
+    get('cameraMessage').textContent = 'Hand tracking paused. Bring your hand back into view.';
+    draw();
+    return;
+  }
+
   state.cursor = point ? { x: point.x * WIDTH, y: point.y * HEIGHT } : null;
   get('cameraMessage').classList.remove('error');
   if (event === 'calibrated') {
     get('cameraMessage').textContent = 'Pinch calibrated. Release, then pinch again to draw.';
     get('calibrateBtn').disabled = false;
+    state.cameraNoticeUntil = performance.now() + 2800;
   } else if (event === 'calibration-failed') {
     get('cameraMessage').textContent = 'Calibration did not detect a pinch. Try again.';
     get('calibrateBtn').disabled = false;
-  } else {
+    state.cameraNoticeUntil = performance.now() + 2800;
+  } else if (performance.now() > state.cameraNoticeUntil) {
     get('cameraMessage').textContent = detected
       ? (pinch ? 'Pinch detected — drawing.' : 'Hand detected. Pinch to draw.')
       : 'Show one hand to the camera.';
@@ -353,6 +394,9 @@ async function enableCamera() {
 get('cameraRetry').addEventListener('click', enableCamera);
 get('calibrateBtn').addEventListener('click', () => {
   if (!camera.startCalibration()) return;
+  if (state.drawing && !state.pointing) clearDrawing();
+  state.pinching = false;
+  state.cameraNoticeUntil = 0;
   get('calibrateBtn').disabled = true;
   get('cameraMessage').textContent = 'Hold a comfortable pinch for two seconds.';
 });
