@@ -136,6 +136,9 @@ function renderLevels() {
   list.replaceChildren();
   const available = playableLevels();
   const mastered = masteryCount(scores.bests, LEVELS);
+  const index = available.findIndex(item => item.id === level().id) + 1;
+  get('lessonIndex').textContent = `${String(index).padStart(2, '0')} / ${String(available.length).padStart(2, '0')}`;
+  get('nextBtn').textContent = nextLevelIndex() === 0 ? 'First level ↻' : 'Next level →';
   const progress = get('secretProgress');
   if (progress) progress.textContent = mastered === 0
     ? `Secret levels unlock when you earn ${UNLOCK_SCORE}% on an original shape.`
