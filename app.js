@@ -96,13 +96,13 @@ function draw() {
   ctx.strokeStyle = level().color;
   ctx.lineWidth = 3;
   ctx.stroke();
-  ctx.fillStyle = '#d0def7';
+  ctx.fillStyle = '#D6E3FB';
   ctx.font = 'bold 13px Arial, sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('START', start.x, start.y - 29);
 
   if (state.points.length) {
-    drawLine(state.points, '#e1edff', 5);
+    drawLine(state.points, '#EDF3FF', 5);
     const last = state.points.at(-1);
     ctx.beginPath();
     ctx.arc(last.x, last.y, 5, 0, Math.PI * 2);
@@ -113,7 +113,7 @@ function draw() {
   if (state.cursor && state.cameraOn && !state.pointing && !state.result) {
     ctx.beginPath();
     ctx.arc(state.cursor.x, state.cursor.y, state.pinching ? 20 : 14, 0, Math.PI * 2);
-    ctx.strokeStyle = state.pinching ? '#ffcb8a' : '#ffffff';
+    ctx.strokeStyle = state.pinching ? '#FFAA67' : '#ffffff';
     ctx.lineWidth = 2.5;
     ctx.stroke();
     ctx.beginPath();
