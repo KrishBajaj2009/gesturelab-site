@@ -143,7 +143,7 @@ function draw() {
   const start = target[0];
   ctx.beginPath();ctx.arc(start.x,start.y,9,0,Math.PI*2);ctx.fillStyle='#ffffff';ctx.fill();
   ctx.beginPath();ctx.arc(start.x,start.y,17,0,Math.PI*2);ctx.strokeStyle=targetColor;ctx.lineWidth=2;ctx.stroke();
-  ctx.fillStyle=state.highContrast?'#ffffff':'#aabed3';ctx.font='600 13px DM Sans, sans-serif';ctx.textAlign='center';ctx.fillText('START',start.x,start.y-29);
+  ctx.fillStyle=state.highContrast?'#ffffff':'#aabed3';ctx.font='600 13px Arial, sans-serif';ctx.textAlign='center';ctx.fillText('START',start.x,start.y-29);
   if (state.points.length) {
     ctx.save();ctx.globalAlpha=.12;drawPolyline(state.points,'#9cbaff',14,0);ctx.restore();
     drawPolyline(state.points,'#e1ebff',state.highContrast?7:5,0);
@@ -170,7 +170,16 @@ function renderNavigation() {
     if (Number.isFinite(progress.bests[level.id])) {
       const score=document.createElement('span');score.className='level-best';score.textContent=`${progress.bests[level.id]}%`;button.append(score);
     }
-    button.addEventListener('click',()=>changeLevel(i));$('levelList').append(button);
+    button.addEventListener('click', () => {
+      changeLevel(i);
+      if (window.innerWidth <= 720) {
+        $('gameboard').scrollIntoView({
+          block: 'start',
+          behavior: state.reducedMotion ? 'auto' : 'smooth'
+        });
+      }
+    });
+    $('levelList').append(button);
   });
 }
 function renderScores() {
