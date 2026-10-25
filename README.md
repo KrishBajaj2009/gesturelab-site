@@ -11,7 +11,8 @@ GestureLab is a responsive, privacy-conscious educational game in which players 
 - Algorithmic scoring: drawing precision, guide coverage, and excessive-stroke penalty
 - Mouse and touch fallback; high-contrast and reduced-motion options
 - Personal-best scores and number of attempts saved to this browser only
-- Responsive interface for desktop, tablet, and phone
+- Responsive game interface with four selectable level cards, designed for desktop, tablet, and phone
+- Arial font across the interface and canvas
 - Clean error handling when camera/model access fails
 
 ## Files
@@ -46,7 +47,7 @@ To update the site, commit your changes to `main`; GitHub Pages republishes auto
 
 ## Visual design
 
-The interface uses an editorial product layout: a charcoal navigation rail, off-white workspace, restrained blue highlights, and a dark, high-contrast canvas. The rest of the page stays visually quiet so the drawing activity remains the focus. All styles are in `styles.css`; there is no CSS framework.
+The interface combines a compact product-style navigation rail with a playful game hub: illustrated level tiles, a prominent tracing canvas, a score summary, and a right-hand camera/settings panel. Every visible UI font uses **Arial**, including canvas labels. Layout and styling live in `index.html` and `styles.css`; no CSS framework or remote font library is used. The interface is an original design, not a copy of another game's artwork.
 
 ## Run it on your computer
 
