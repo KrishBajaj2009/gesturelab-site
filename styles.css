@@ -1,4 +1,4 @@
-/* GestureLab — a simple, single-screen drawing game */
+/* Gesture: the geometry game. ZIP Ties-inspired orange and blue with Arial. */
 :root {
   font-family: Arial, Helvetica, sans-serif;
   color: #192536;
@@ -10,12 +10,12 @@
 body { margin: 0; min-width: 320px; }
 button { font: inherit; cursor: pointer; }
 button:disabled { opacity: .45; cursor: not-allowed; }
-button:focus-visible { outline: 3px solid #77a7f7; outline-offset: 2px; }
+button:focus-visible { outline: 3px solid #F2A064; outline-offset: 2px; }
 .hidden { display: none !important; }
 .app { max-width: 1600px; margin: 0 auto; padding: 28px 34px 54px; }
 .app-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-bottom: 26px; border-bottom: 1px solid #e3e6ec; }
-.brand { font-size: 25px; font-weight: 800; letter-spacing: -.9px; line-height: 1.1; }
-.brand-dot { color: #3866dc; }
+.brand { font-size: 25px; font-weight: 800; letter-spacing: -.9px; line-height: 1.1; color: #204F9C; }
+/* Simple wordmark; no decorative suffix. */
 .identity p { margin: 7px 0 0; color: #7b8595; font-size: 13px; }
 .header-status { color: #657185; font-size: 12px; text-align: right; }
 
@@ -39,46 +39,46 @@ button:focus-visible { outline: 3px solid #77a7f7; outline-offset: 2px; }
   border-radius: 8px;
   transition: border-color .15s, background-color .15s;
 }
-.level-item:hover { border-color: #a6bce8; }
-.level-item.active { background: #eff4ff; border-color: #4772db; }
-.level-item.active::after { content: '✓'; position: absolute; top: 9px; right: 12px; font-size: 12px; font-weight: bold; color: #315dc5; }
-.level-shape { width: 47px; height: 47px; flex: 0 0 47px; display: grid; place-items: center; border-radius: 7px; background: #e9f0ff; color: #3866dc; font-size: 32px; }
-.level-item:nth-child(2) .level-shape { background: #fcefe9; color: #bc7358; }
-.level-item:nth-child(3) .level-shape { background: #e7f6ee; color: #399270; }
-.level-item:nth-child(4) .level-shape { background: #f3edfe; color: #9366bb; }
+.level-item:hover { border-color: #E8A672; }
+.level-item.active { background: #FFF1E6; border-color: #E7772C; }
+.level-item.active::after { content: '✓'; position: absolute; top: 9px; right: 12px; font-size: 12px; font-weight: bold; color: #A94408; }
+.level-shape { width: 47px; height: 47px; flex: 0 0 47px; display: grid; place-items: center; border-radius: 7px; background: #FFF0E5; color: #204F9C; font-size: 32px; }
+.level-item:nth-child(2) .level-shape { background: #EAF1FF; color: #244F9F; }
+.level-item:nth-child(3) .level-shape { background: #FFF0E5; color: #B94A0A; }
+.level-item:nth-child(4) .level-shape { background: #EAF1FF; color: #204F9C; }
 .level-name { margin-bottom: 5px; font-size: 15px; font-weight: 700; }
 .level-sub { color: #8692a0; font-size: 11px; }
-.level-best { color: #305fca; font-size: 10px; font-weight: 700; margin-left: auto; align-self: flex-end; }
+.level-best { color: #204F9C; font-size: 10px; font-weight: 700; margin-left: auto; align-self: flex-end; }
 
 /* One large canvas and a camera at its side */
 .play-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(255px, 30%); gap: 18px; align-items: start; }
 .game, .camera-panel { min-width: 0; background: white; border: 1px solid #e0e5ed; border-radius: 10px; overflow: hidden; }
 .panel-heading, .camera-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 102px; padding: 20px; }
-.eyebrow { color: #5573b4; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
+.eyebrow { color: #204F9C; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
 .panel-heading h2, .camera-heading h2 { margin: 6px 0 3px; font-size: 22px; line-height: 1.2; letter-spacing: -.5px; }
 .panel-heading p { margin: 0; font-size: 12px; color: #7f8999; line-height: 1.5; }
 .game-actions { display: flex; gap: 8px; flex-shrink: 0; }
 .button { border: 1px solid #d5ddeb; border-radius: 6px; padding: 11px 14px; font-size: 12px; font-weight: 700; color: #273751; background: white; }
-.button:hover:not(:disabled) { background: #edf2fb; }
+.button:hover:not(:disabled) { background: #EFF3FA; }
 .button-subtle { background: #f8f9fc; }
-.button-primary { border-color: #315fd5; background: #315fd5; color: white; }
-.button-primary:hover:not(:disabled) { background: #2450be; }
+.button-primary { border-color: #C24D0B; background: #C24D0B; color: white; }
+.button-primary:hover:not(:disabled) { background: #A43F06; }
 .full { width: 100%; }
 
 /* The drawing field is the dominant visual element. */
-.stage-wrap { position: relative; overflow: hidden; margin: 0 13px; background: #162748; border-radius: 7px; aspect-ratio: 900/560; touch-action: none; }
+.stage-wrap { position: relative; overflow: hidden; margin: 0 13px; background: #142953; border-radius: 7px; aspect-ratio: 900/560; touch-action: none; }
 #stage { display: block; position: relative; width: 100%; height: 100%; z-index: 1; touch-action: none; cursor: crosshair; }
-.stage-label, .stage-tip { position: absolute; z-index: 2; pointer-events: none; color: #cbd9f6; font-size: 10px; font-weight: 700; }
+.stage-label, .stage-tip { position: absolute; z-index: 2; pointer-events: none; color: #E4EAF8; font-size: 10px; font-weight: 700; }
 .stage-label { left: 17px; top: 15px; }
 .stage-tip { right: 17px; top: 15px; }
 .game-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 48px; padding: 10px 18px; color: #758295; font-size: 11px; }
 #coverageMetric { font-size: 10px; font-weight: 700; white-space: nowrap; color: #8793a3; }
 .result-overlay { position: absolute; z-index: 4; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; text-align: center; color: white; background: rgba(13, 27, 52, .97); }
-.result-label { font-size: 11px; letter-spacing: 1px; font-weight: 700; color: #9ebcf7; }
+.result-label { font-size: 11px; letter-spacing: 1px; font-weight: 700; color: #F7A56B; }
 .result-score { font-size: clamp(62px, 8vw, 104px); line-height: 1.15; font-weight: 800; letter-spacing: -4px; margin: 6px 0; }
-.result-score span { color: #a4c2ff; font-size: .5em; }
+.result-score span { color: #FFC093; font-size: .5em; }
 #resultMessage { font-size: 16px; }
-#resultDetails { font-size: 12px; color: #b9c7e2; margin: 10px 0; }
+#resultDetails { font-size: 12px; color: #D2DDF0; margin: 10px 0; }
 .result-buttons { display: flex; gap: 10px; margin-top: 14px; }
 
 /* Camera */
@@ -100,7 +100,7 @@ button:focus-visible { outline: 3px solid #77a7f7; outline-offset: 2px; }
 .camera-panel > .button { display: block; width: calc(100% - 32px); margin: 8px 16px 0; }
 .camera-instructions { padding: 19px 16px 0; display: grid; gap: 15px; border-top: 1px solid #edf0f4; margin-top: 20px; }
 .camera-instructions > div { display: flex; align-items: center; gap: 10px; color: #647186; font-size: 12px; line-height: 1.4; }
-.instruction-count { flex: 0 0 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: #eaf0fb; color: #315fd5; font-size: 11px; font-weight: 700; }
+.instruction-count { flex: 0 0 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: #FFF0E5; color: #C24D0B; font-size: 11px; font-weight: 700; }
 .privacy-note { color: #99a4b2; font-size: 10px; line-height: 1.6; margin: 21px 16px 0; }
 
 @media (max-width: 1100px) {
