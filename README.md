@@ -1,6 +1,6 @@
-# GestureLab — Interactive geometry studio
+# Gesture — Interactive geometry studio
 
-GestureLab is a responsive, privacy-conscious educational game in which players trace geometric shapes using a webcam pinch gesture or a mouse/touchscreen. It is a **static website**: no backend, accounts, payment, or database are required.
+Gesture is a responsive, privacy-conscious educational game in which players trace geometric shapes using a webcam pinch gesture or a mouse/touchscreen. It is a **static website**: no backend, accounts, payment, or database are required.
 
 ## Features
 
@@ -39,13 +39,15 @@ This repository is set up as a static site, so no build pipeline or backend is n
 2. Choose **Deploy from a branch**.
 3. Choose branch `main` and folder `/ (root)`, then click Save.
 4. Review the deployment under **Actions → pages-build-deployment**.
-5. Open [GestureLab](https://krishbajaj2009.github.io/zip2026/) once GitHub Pages reports a successful deployment.
+5. Open [Gesture](https://krishbajaj2009.github.io/zip2026/) once GitHub Pages reports a successful deployment.
 
 The published address is `https://krishbajaj2009.github.io/zip2026/`. All HTML, CSS, and JavaScript paths are relative so the site works under the repository path.
 
 To update the site, commit your changes to `main`; GitHub Pages republishes automatically. The browser needs Internet access to retrieve the MediaPipe tracking library and model on first use. Arial is provided by the operating system.
 
 ## Visual design
+
+The name shown on the website is **Gesture**. Its blue/orange palette is inspired by FTC Team 16290 Z.I.P Ties apparel; the hexadecimal values are chosen for legibility, not claimed as official brand specifications. The app continues to use Arial.
 
 The site opens straight into the game. Four level choices sit above a wide drawing canvas on the left and a live camera feed on the right. The old sidebar, statistics, promotional banner and settings panel have been removed. The interface uses Arial and no remote font service.
 
