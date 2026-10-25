@@ -200,9 +200,11 @@ export class HandCamera {
         }
       } else if (this.trackFrames >= 3 && !this.calibration) {
         this.pinchState = nextPinchState(this.pinchState, this.filteredRatio, this.threshold);
-      } else {
+      } else if (this.calibration) {
         this.pinchState = { active: false, closeFrames: 0, openFrames: 0 };
       }
+      // Preserve an existing pinch during the first two frames after a brief
+      // hand-tracking dropout; otherwise reconnecting would finish the stroke.
 
       this.pinching = this.pinchState.active;
       this.drawPreview(points);
