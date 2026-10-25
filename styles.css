@@ -92,6 +92,31 @@ button:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
 .level-sub { color: #a5b6ce; font-size: 11px; line-height: 1.4; }
 .level-best { color: #ffad77; font-size: 10px; font-weight: 700; margin-left: auto; align-self: flex-end; }
 
+/* Unlocked bonus cards appear only when a player has earned them. */
+.secret-progress {
+  margin: 12px 2px 0;
+  color: #a9bbd6;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.level-item.secret {
+  border-color: #725637;
+  background: #202c49;
+}
+.level-item.secret:hover { border-color: #ffad75; background: #2d3957; }
+.level-item.secret.active { border-color: var(--orange); background: #43344b; }
+.level-item.secret .level-shape { color: #ffc094; background: #4a3850; }
+.secret-tag {
+  position: absolute;
+  top: 5px;
+  right: 11px;
+  color: #ffad75;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .8px;
+}
+.level-item.secret .level-best { right: 10px; bottom: 7px; }
+
 /* Two-column play area: tracing on the left, camera on the right. */
 .play-layout {
   display: grid;
