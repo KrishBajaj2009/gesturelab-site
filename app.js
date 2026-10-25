@@ -70,7 +70,7 @@ function draw() {
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-  ctx.strokeStyle = 'rgba(231,239,255,.055)';
+  ctx.strokeStyle = 'rgba(32,49,77,.065)';
   ctx.lineWidth = 1;
   for (let x = 0; x <= WIDTH; x += 40) {
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, HEIGHT); ctx.stroke();
@@ -81,10 +81,10 @@ function draw() {
 
   const path = target();
   ctx.save();
-  ctx.globalAlpha = .18;
-  drawLine(path, level().color, 20);
+  ctx.globalAlpha = .075;
+  drawLine(path, level().color, 19);
   ctx.restore();
-  drawLine(path, level().color, 4, [12, 11]);
+  drawLine(path, level().color, 3.5, [12, 11]);
 
   const start = path[0];
   ctx.beginPath();
@@ -96,29 +96,29 @@ function draw() {
   ctx.strokeStyle = level().color;
   ctx.lineWidth = 3;
   ctx.stroke();
-  ctx.fillStyle = '#D6E3FB';
+  ctx.fillStyle = '#4d607d';
   ctx.font = 'bold 13px Arial, sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('START', start.x, start.y - 29);
 
   if (state.points.length) {
-    drawLine(state.points, '#EDF3FF', 5);
+    drawLine(state.points, '#223e66', 4.5);
     const last = state.points.at(-1);
     ctx.beginPath();
     ctx.arc(last.x, last.y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#223e66';
     ctx.fill();
   }
 
   if (state.cursor && state.cameraOn && !state.pointing && !state.result) {
     ctx.beginPath();
     ctx.arc(state.cursor.x, state.cursor.y, state.pinching ? 20 : 14, 0, Math.PI * 2);
-    ctx.strokeStyle = state.pinching ? '#FFAA67' : '#ffffff';
+    ctx.strokeStyle = state.pinching ? '#d05d20' : '#244d92';
     ctx.lineWidth = 2.5;
     ctx.stroke();
     ctx.beginPath();
     ctx.arc(state.cursor.x, state.cursor.y, 3, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#244d92';
     ctx.fill();
   }
 }
