@@ -108,8 +108,8 @@ button:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
 .level-item.secret .level-shape { color: #ffc094; background: #4a3850; }
 .secret-tag {
   position: absolute;
-  top: 5px;
-  right: 11px;
+  top: 7px;
+  right: 30px;
   color: #ffad75;
   font-size: 8px;
   font-weight: 800;
