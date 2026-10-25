@@ -1,210 +1,97 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f8fc">
-  <meta name="description" content="GestureLab is a playful geometry game. Draw shapes with hand gestures, a mouse, or a touchscreen.">
-  <title>GestureLab | The Geometry Playground</title>
+  <meta name="theme-color" content="#f7f8fa">
+  <meta name="description" content="GestureLab — draw geometric shapes with your hands.">
+  <title>GestureLab — Play</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
   <script type="module" src="./app.js"></script>
 </head>
 <body>
-  <div class="shell">
-    <aside class="sidebar" aria-label="Main navigation">
-      <a class="brand" href="#studio" aria-label="GestureLab home">
-        <span class="brand-mark" aria-hidden="true">G<span class="brand-spark">.</span></span>
-        <span class="brand-text">GestureLab<small>THE GEOMETRY PLAYGROUND</small></span>
-      </a>
-
-      <div class="sidebar-label">YOUR SPACE</div>
-      <nav class="nav-links" aria-label="Page sections">
-        <a class="active" href="#studio"><span class="nav-symbol" aria-hidden="true">▦</span> Playground <span class="nav-chevron" aria-hidden="true">›</span></a>
-        <a href="#how-it-works"><span class="nav-symbol" aria-hidden="true">?</span> How to play</a>
-      </nav>
-
-      <div class="sidebar-divider"></div>
-      <div class="sidebar-label sidebar-label-secondary">MADE TO BE PLAYED</div>
-      <div class="sidebar-feature">
-        <span class="feature-icon" aria-hidden="true">✳</span>
-        <h2>A hands-on way to learn.</h2>
-        <p>Trace, experiment, and challenge yourself. No special equipment needed.</p>
-        <a href="#gameboard">Go to the game <span aria-hidden="true">→</span></a>
+  <main class="app">
+    <header class="app-header">
+      <div class="identity">
+        <div class="brand">GestureLab<span class="brand-dot">.</span></div>
+        <p>Draw shapes with your hands.</p>
       </div>
+      <div class="header-status" id="appStatus" role="status" aria-live="polite">Starting camera…</div>
+    </header>
 
-      <div class="sidebar-bottom">
-        <p><strong>GestureLab</strong> <span class="version">/ 2026</span></p>
-        <span>Play with movement. Learn by doing.</span>
-      </div>
-    </aside>
+    <section class="levels" aria-labelledby="levelsTitle">
+      <div class="section-label"><h1 id="levelsTitle">Choose a level</h1><span>01 — 04</span></div>
+      <div id="levelList" class="level-list" aria-label="Shape levels"></div>
+    </section>
 
-    <main class="main" id="studio">
-      <header class="topbar">
-        <div class="breadcrumbs">GestureLab <span>/</span> Playground</div>
-        <div class="top-right">
-          <span class="online-dot" aria-hidden="true"></span>
-          <span id="appStatus" role="status">Ready to play</span>
-          <button id="helpBtn" class="help-btn" type="button" aria-label="Open instructions">?</button>
+    <div class="play-layout">
+      <section class="game" id="gameboard" aria-label="Shape tracing game">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow" id="lessonIndex">01 / 04</span>
+            <h2 id="levelTitle">Circle</h2>
+            <p id="levelDescription">Trace the outline in one continuous motion.</p>
+          </div>
+          <div class="game-actions">
+            <button class="button button-subtle" id="clearBtn" type="button">Reset</button>
+            <button class="button button-primary" id="nextBtn" type="button">Next level →</button>
+          </div>
         </div>
-      </header>
 
-      <div class="content">
-        <section class="hero" aria-labelledby="heroTitle">
-          <div class="hero-copy">
-            <div class="hero-kicker"><span class="eyebrow-line" aria-hidden="true"></span> WELCOME TO THE PLAYGROUND</div>
-            <h1 id="heroTitle">Math is better <span>when you move.</span></h1>
-            <p>Use a webcam, mouse, or touchscreen to draw your way through four geometry challenges. Every attempt is a chance to improve.</p>
-            <div class="hero-tags"><span>4 challenges</span><span>Hand tracking</span><span>Instant scoring</span></div>
-          </div>
-          <div class="hero-art" aria-hidden="true">
-            <div class="hero-art-ring ring-one"></div>
-            <div class="hero-art-ring ring-two"></div>
-            <span class="shape-token token-circle">○</span>
-            <span class="shape-token token-triangle">△</span>
-            <span class="shape-token token-square">□</span>
-            <span class="shape-token token-star">✳</span>
-            <div class="hero-art-caption">PLAY / LEARN / REPEAT</div>
-          </div>
-        </section>
+        <div class="stage-wrap">
+          <canvas id="stage" width="900" height="560" aria-label="Drawing surface. Trace the outline using your hand or pointer."></canvas>
+          <div class="stage-label" id="canvasMode">MOVE YOUR HAND TO DRAW</div>
+          <div class="stage-tip" id="canvasHint">Pinch to start · Release to finish</div>
 
-        <section class="mission-select" aria-labelledby="chooseTitle">
-          <div class="section-row">
-            <div><span class="section-overline">01 — PICK A CHALLENGE</span><h2 id="chooseTitle">Choose your shape.</h2></div>
-            <span class="section-note">Start anywhere. Switch levels whenever you want.</span>
-          </div>
-          <div id="levelList" class="level-list" aria-label="Select a geometry challenge"></div>
-        </section>
-
-        <section class="workspace" id="gameboard" aria-label="Drawing game">
-          <div class="workspace-toolbar">
-            <div class="workspace-title">
-              <div class="workspace-eyebrow">NOW PLAYING <span id="lessonIndex">01 / 04</span></div>
-              <h2 id="levelTitle">Trace a Circle</h2>
-              <p id="levelDescription">Follow the guide in one continuous line.</p>
-            </div>
-            <div class="toolbar-actions">
-              <button id="clearBtn" class="icon-button" type="button" title="Try again" aria-label="Clear drawing">
-                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M3 11a9 9 0 1 1 2.5 6.3M3 4v7h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              <button id="nextBtn" class="button button-primary" type="button">Next level →</button>
+          <div class="result-overlay hidden" id="resultOverlay" role="status" aria-live="polite">
+            <span class="result-label">YOUR SCORE</span>
+            <div class="result-score" id="resultScore">0<span>%</span></div>
+            <strong id="resultMessage">Nice work.</strong>
+            <p id="resultDetails"></p>
+            <div class="result-buttons">
+              <button class="button button-subtle" id="resultRetry" type="button">Try again</button>
+              <button class="button button-primary" id="resultNext" type="button">Next level →</button>
             </div>
           </div>
-
-          <div class="canvas-wrap" id="canvasWrap">
-            <div class="canvas-grid" aria-hidden="true"></div>
-            <canvas id="stage" width="900" height="560" aria-label="Trace the shape with a mouse, touch, or webcam pinch gesture"></canvas>
-            <div class="canvas-top">
-              <span class="canvas-chip"><span class="pulse-dot" aria-hidden="true"></span><span id="canvasMode">MOUSE / TOUCH MODE</span></span>
-              <span id="canvasHint" class="canvas-hint">PRESS AND DRAG TO TRACE</span>
-            </div>
-            <div class="canvas-bottom">
-              <span id="liveIndicator">● Ready when you are</span>
-              <span class="axis-label">DRAWING AREA</span>
-            </div>
-
-            <div id="resultOverlay" class="result-overlay hidden" role="status" aria-live="polite">
-              <span class="result-eyebrow">YOUR RESULT</span>
-              <strong id="resultScore">0<span>%</span></strong>
-              <span id="resultMessage">Nice work.</span>
-              <span id="resultDetails"></span>
-              <div class="result-buttons">
-                <button id="resultRetry" class="button button-ghost" type="button">Try again</button>
-                <button id="resultNext" class="button button-primary" type="button">Next challenge →</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="workspace-footer">
-            <div class="instruction-key"><span class="key-icon" aria-hidden="true">✎</span><span id="footerInstruction">Press, trace the guide, then release to score.</span></div>
-            <div class="footer-actions"><span id="strokeMetric">0 POINTS</span><span class="divider-dot">·</span><span id="coverageMetric">0% COVERAGE</span></div>
-          </div>
-        </section>
-
-        <section class="stats-row" aria-label="Your progress">
-          <div class="stat">
-            <div class="stat-icon" aria-hidden="true">↗</div>
-            <div><small>ATTEMPTS</small><strong id="totalAttempts">0</strong></div>
-          </div>
-          <div class="stat">
-            <div class="stat-icon" aria-hidden="true">★</div>
-            <div><small>PERSONAL BEST</small><strong id="bestScore">—</strong></div>
-          </div>
-          <div class="stat">
-            <div class="stat-icon" aria-hidden="true">▣</div>
-            <div><small>LEVELS EXPLORED</small><strong id="levelsExplored">0 <span>/ 4</span></strong></div>
-          </div>
-        </section>
-
-        <section class="guide-section" id="how-it-works">
-          <div class="section-heading"><span>HOW TO PLAY</span><h2>Three moves. That's all.</h2></div>
-          <div class="guide-cards">
-            <article><span class="guide-icon" aria-hidden="true">01</span><h3>Choose</h3><p>Pick a circle, triangle, square, or star from the level cards above.</p></article>
-            <article><span class="guide-icon" aria-hidden="true">02</span><h3>Draw</h3><p>Drag with a mouse or pinch your fingers in front of the webcam to trace the shape.</p></article>
-            <article><span class="guide-icon" aria-hidden="true">03</span><h3>Improve</h3><p>Release to get a score based on accuracy and coverage. Try to beat your best.</p></article>
-          </div>
-        </section>
-      </div>
-    </main>
-
-    <aside class="control-panel" aria-label="Game controls and settings">
-      <div class="panel-heading"><span>CONTROLS</span><span class="panel-live"><i aria-hidden="true"></i> LOCAL SESSION</span></div>
-      <div class="panel-block">
-        <h3>How do you want to play?</h3>
-        <p class="side-subtitle">Both input modes work with the same challenges.</p>
-        <div class="mode-toggle" role="group" aria-label="Choose input mode">
-          <button id="mouseMode" class="selected" type="button" aria-pressed="true">↖ <span>Pointer</span></button>
-          <button id="cameraMode" type="button" aria-pressed="false">◉ <span>Camera</span></button>
         </div>
-      </div>
 
-      <div class="panel-block camera-block">
-        <div class="panel-line"><h3>Camera preview</h3><span id="cameraPill" class="camera-pill">OFFLINE</span></div>
+        <div class="game-footer">
+          <span id="footerInstruction">Pinch your thumb and index finger together to trace.</span>
+          <span id="coverageMetric">0% COVERAGE</span>
+        </div>
+      </section>
+
+      <aside class="camera-panel" aria-labelledby="cameraTitle">
+        <div class="camera-heading">
+          <div>
+            <span class="eyebrow">LIVE INPUT</span>
+            <h2 id="cameraTitle">Camera</h2>
+          </div>
+          <span class="camera-status" id="cameraPill">CONNECTING</span>
+        </div>
+
         <div class="preview" id="preview">
-          <video id="webcam" autoplay playsinline muted aria-label="Live webcam preview"></video>
+          <video id="webcam" autoplay muted playsinline aria-label="Your camera feed"></video>
           <canvas id="handCanvas" width="320" height="240" aria-hidden="true"></canvas>
-          <div id="previewPlaceholder" class="preview-placeholder"><span aria-hidden="true">✋</span><strong>Camera is off</strong><small>Choose Camera to start hand tracking.</small></div>
+          <div class="camera-placeholder" id="previewPlaceholder">
+            <strong>Camera access</strong>
+            <span>Allow your browser to use the camera to play with your hands.</span>
+          </div>
         </div>
-        <p id="cameraMessage" class="camera-message">Video is processed on your device. Camera frames are not uploaded.</p>
-        <button id="calibrateBtn" class="button button-outline full" type="button" disabled>Calibrate pinch</button>
-        <button id="stopCameraBtn" class="button button-small full hidden" type="button">Turn camera off</button>
-      </div>
 
-      <div class="panel-block settings-block">
-        <h3>Game preferences</h3>
-        <label class="setting-label" for="smoothing">Cursor responsiveness <span id="smoothValue">Balanced</span></label>
-        <input id="smoothing" type="range" min="1" max="5" value="3">
-        <div class="setting-range"><span>Steady</span><span>Fast</span></div>
-        <label class="toggle-row"><span><strong>High contrast</strong><small>Stronger drawing guides</small></span><input id="contrast" type="checkbox" role="switch"></label>
-        <label class="toggle-row"><span><strong>Reduced motion</strong><small>Fewer visual effects</small></span><input id="reducedMotion" type="checkbox" role="switch"></label>
-      </div>
+        <p id="cameraMessage" class="camera-message" role="status" aria-live="polite">Your browser will ask for camera permission.</p>
+        <button class="button button-primary full hidden" id="cameraRetry" type="button">Enable camera</button>
+        <button class="button button-subtle full" id="calibrateBtn" type="button" disabled>Calibrate pinch</button>
 
-      <div class="panel-block progress-block">
-        <div class="panel-line"><h3>Personal records</h3><span class="muted-small">THIS DEVICE</span></div>
-        <div id="progressList" class="progress-list"></div>
-        <button id="resetProgress" class="text-button" type="button">Reset saved scores</button>
-      </div>
-
-      <div class="privacy-note"><span class="lock-icon" aria-hidden="true">▣</span><span><strong>No account required</strong><br>Scores are saved in this browser only. Camera processing stays on your device.</span></div>
-    </aside>
-  </div>
-
-  <dialog id="helpDialog" class="help-dialog" aria-labelledby="dialogTitle">
-    <form method="dialog">
-      <button class="modal-close" type="submit" aria-label="Close instructions">×</button>
-      <div class="modal-kicker">QUICK START</div>
-      <h2 id="dialogTitle">Ready to draw?</h2>
-      <p>Follow the outline to see how well you trace it. Your score combines precision and shape coverage.</p>
-      <ol>
-        <li><strong>Pick a shape.</strong> Choose any of the four levels.</li>
-        <li><strong>Pointer mode:</strong> Press and drag using your mouse, trackpad, or touchscreen.</li>
-        <li><strong>Camera mode:</strong> Allow webcam access, then pinch your thumb and index finger to draw.</li>
-        <li><strong>Calibrate if needed:</strong> Pinch comfortably while using the Calibrate pinch button.</li>
-        <li><strong>Release to score.</strong> Check your result and try again.</li>
-      </ol>
-      <p class="modal-footnote">Webcam access requires HTTPS or localhost. Gesture tracking uses Google's MediaPipe model in your browser.</p>
-      <button value="close" class="button button-primary full">Let's play →</button>
-    </form>
-  </dialog>
+        <div class="camera-instructions">
+          <div><span class="instruction-count">1</span> Show one hand to the camera.</div>
+          <div><span class="instruction-count">2</span> Pinch your thumb and index finger.</div>
+          <div><span class="instruction-count">3</span> Trace the shape and release.</div>
+        </div>
+        <p class="privacy-note">Camera frames are processed in your browser, not uploaded to this site. You can also draw with a mouse or trackpad.</p>
+      </aside>
+    </div>
+  </main>
 </body>
 </html>
