@@ -30,27 +30,43 @@ export class HandCamera {
 
   async start() {
     const token = ++this.generation;
-    if (!navigator.mediaDevices?.getUserMedia) throw new Error('Camera requires a secure HTTPS website or localhost and a supported browser.');
+    if (!navigator.mediaDevices?.getUserMedia) {
+      throw new Error('This browser needs an HTTPS website and camera permission.');
+    }
     try {
-      if (!this.tracker) {
-        // Dynamic import leaves pointer mode working even when the camera model is unavailable.
-        const { HandLandmarker, FilesetResolver } = await import(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MEDIAPIPE_VERSION}/vision_bundle.mjs`);
-        const wasm = await FilesetResolver.forVisionTasks(WASM_URL);
-        this.tracker = await HandLandmarker.createFromOptions(wasm, {
-          baseOptions: { modelAssetPath: MODEL_URL, delegate: 'CPU' },
-          runningMode: 'VIDEO', numHands: 1,
-          minHandDetectionConfidence: 0.55,
-          minHandPresenceConfidence: 0.5,
-          minTrackingConfidence: 0.5,
-        });
+      // Ask for permission before loading the hand-tracking model.
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }
+      });
+      if (token !== this.generation) {
+        stream.getTracks().forEach(track => track.stop());
+        return false;
       }
-      if (token !== this.generation) return false;
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } });
-      if (token !== this.generation) { stream.getTracks().forEach(t => t.stop()); return false; }
+
       this.stream = stream;
       this.video.srcObject = stream;
       await this.video.play();
-      if (token !== this.generation) { stream.getTracks().forEach(t => t.stop()); return false; }
+      if (token !== this.generation) {
+        stream.getTracks().forEach(track => track.stop());
+        return false;
+      }
+
+      if (!this.tracker) {
+        const { HandLandmarker, FilesetResolver } = await import(
+          `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MEDIAPIPE_VERSION}/vision_bundle.mjs`
+        );
+        const wasm = await FilesetResolver.forVisionTasks(WASM_URL);
+        this.tracker = await HandLandmarker.createFromOptions(wasm, {
+          baseOptions: { modelAssetPath: MODEL_URL, delegate: 'CPU' },
+          runningMode: 'VIDEO',
+          numHands: 1,
+          minHandDetectionConfidence: 0.55,
+          minHandPresenceConfidence: 0.5,
+          minTrackingConfidence: 0.5
+        });
+      }
+      if (token !== this.generation) return false;
       this.running = true;
       this.lastTime = -1;
       this.lastInferenceAt = 0;
