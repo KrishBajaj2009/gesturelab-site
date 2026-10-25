@@ -47,7 +47,7 @@ To update the site, commit your changes to `main`; GitHub Pages republishes auto
 
 ## Visual design
 
-The website is named **Gesture**. Its visual system uses a white page, a white drawing board, dark text, subtle gray dividers, and restrained orange/blue accents, inspired by ZipStocks' requested clean aesthetic. The precise ZipStocks CSS colors were not available to verify, so these are coordinated approximations rather than an exact palette. The app continues to use Arial.
+The website is named **Gesture**. Its navy page (`#0C1D41`), darker header (`#061430`), and orange highlights (`#FF914D`) are sampled from the user's ZIP Stocks screenshot. The cards and drawing board also use dark navy, with light text and visible tracing guides. Arial is used throughout.
 
 The site opens straight into the game. Four level choices sit above a wide drawing canvas on the left and a live camera feed on the right. The old sidebar, statistics, promotional banner and settings panel have been removed. The interface uses Arial and no remote font service.
 
